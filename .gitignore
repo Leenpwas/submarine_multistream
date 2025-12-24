@@ -1,0 +1,6 @@
+build/
+*.o
+*.so
+*.swp
+.vscode/
+.idea/
