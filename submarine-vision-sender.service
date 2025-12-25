@@ -1,0 +1,14 @@
+[Unit]
+Description=Submarine Vision Sender - Streams depth/2D/3D data to surface
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/submarine_multistream/build
+ExecStart=/home/pi/submarine_multistream/build/submarine_vision_sender 192.168.1.100 5000
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
