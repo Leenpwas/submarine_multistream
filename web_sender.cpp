@@ -1,5 +1,4 @@
 #include <libobsensor/hpp/Pipeline.hpp>
-#include <libobsensor/hpp/ObSensor.hpp>
 #include <opencv2/opencv.hpp>
 #include <sys/socket.h>
 #include <arpa/inet.h>
