@@ -18,10 +18,10 @@ sudo apt install -y build-essential cmake git pkg-config libopencv-dev python3-o
 # Setup OrbbecSDK
 echo "[3/5] Installing OrbbecSDK (58MB)..."
 if [ -d "$SCRIPT_DIR/OrbbecSDK_minimal" ]; then
-    cp -r "$SCRIPT_DIR/OrbbecSDK_minimal" /home/pi/OrbbecSDK
-    echo "✓ OrbbecSDK installed"
-elif [ -d "/home/pi/OrbbecSDK" ]; then
-    echo "✓ OrbbecSDK already exists"
+    cp -r "$SCRIPT_DIR/OrbbecSDK_minimal" "$HOME/OrbbecSDK"
+    echo "✓ OrbbecSDK installed to $HOME/OrbbecSDK"
+elif [ -d "$HOME/OrbbecSDK" ]; then
+    echo "✓ OrbbecSDK already exists at $HOME/OrbbecSDK"
 else
     echo "✗ OrbbecSDK not found!"
     exit 1
@@ -35,20 +35,27 @@ make submarine_vision_sender submarine_vision_receiver -j4
 
 # Setup launchers
 echo "[5/5] Creating launch scripts..."
-cat > /home/pi/run_receiver.sh << 'RUNNER'
+cat > "$HOME/run_receiver.sh" << 'RUNNER'
 #!/bin/bash
 cd ~/submarine_multistream/build
 ./submarine_vision_receiver 5000
 RUNNER
 
-cat > /home/pi/run_sender.sh << 'RUNNER'
+cat > "$HOME/run_sender.sh" << 'RUNNER'
 #!/bin/bash
 SURFACE_IP="192.168.1.100"
 cd ~/submarine_multistream/build
 ./submarine_vision_sender $SURFACE_IP 5000
 RUNNER
-chmod +x /home/pi/run_receiver.sh /home/pi/run_sender.sh
+chmod +x "$HOME/run_receiver.sh" "$HOME/run_sender.sh"
 
+echo ""
 echo "=== Setup Complete! ==="
-echo "Receiver: /home/pi/run_receiver.sh"
-echo "Sender:   /home/pi/run_sender.sh"
+echo ""
+echo "Quick Start:"
+echo "  Receiver: ~/run_receiver.sh"
+echo "  Sender:   ~/run_sender.sh"
+echo ""
+echo "Username: $(whoami)"
+echo "Home: $HOME"
+echo ""
