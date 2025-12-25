@@ -46,8 +46,20 @@ target_link_libraries(submarine_vision_sender OrbbecSDK ${OpenCV_LIBS} pthread)
 add_executable(submarine_vision_receiver submarine_vision_receiver.cpp)
 target_link_libraries(submarine_vision_receiver ${OpenCV_LIBS} pthread)
 
+# Internet Color Sender (streams color over internet)
+add_executable(internet_color_sender internet_color_sender.cpp)
+target_link_libraries(internet_color_sender OrbbecSDK ${OpenCV_LIBS} pthread)
+
+# ML Object Detection Receiver (receives color, runs detection, displays GUI)
+add_executable(ml_receiver ml_receiver.cpp)
+target_link_libraries(ml_receiver ${OpenCV_LIBS} pthread)
+
+# Web Sender (Pi - lightweight sender for web streaming)
+add_executable(web_sender web_sender.cpp)
+target_link_libraries(web_sender OrbbecSDK ${OpenCV_LIBS} pthread)
+
 # Set RPATH
-set_target_properties(submarine_vision_sender submarine_vision_receiver PROPERTIES
+set_target_properties(submarine_vision_sender submarine_vision_receiver internet_color_sender web_sender PROPERTIES
     BUILD_RPATH "${ORBBEC_SDK}/lib/${ORBBEC_LIB_DIR}"
     INSTALL_RPATH "${ORBBEC_SDK}/lib/${ORBBEC_LIB_DIR}"
 )
