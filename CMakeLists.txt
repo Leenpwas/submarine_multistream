@@ -34,10 +34,10 @@ link_directories(
     ${ORBBEC_SDK}/lib/${ORBBEC_LIB_DIR}
 )
 
-# Find OpenGL, GLFW and GLEW
-find_package(OpenGL REQUIRED)
-find_package(glfw3 REQUIRED)
-find_package(GLEW REQUIRED)
+# Find OpenGL, GLFW and GLEW (optional - only for programs that need them)
+find_package(OpenGL)
+find_package(glfw3)
+find_package(GLEW)
 
 # Original multistream viewer
 add_executable(submarine_multistream submarine_multistream.cpp)
