@@ -1,0 +1,32 @@
+[Unit]
+Description=Submarine GStreamer Camera Stream
+Documentation=file:///home/leenos/submarine_multistream/gstreamer/README.md
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+Group=video
+WorkingDirectory=/home/pi/submarine_multistream/gstreamer
+
+# Auto-restart if crashes
+Restart=always
+RestartSec=5
+
+# Start the TCP sender (more reliable than UDP)
+# REPLACE 192.168.1.100 with your actual receiver/laptop IP!
+ExecStart=/home/pi/submarine_multistream/gstreamer/color_sender_tcp.sh 192.168.1.100 5000
+
+# Restart on failure
+RestartPreventExitStatus=255
+
+# Nice value (lower priority = more CPU)
+Nice=0
+
+# Security settings
+# NoNewPrivileges=true
+# PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

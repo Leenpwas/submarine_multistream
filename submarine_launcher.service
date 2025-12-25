@@ -1,0 +1,31 @@
+[Unit]
+Description=Submarine Camera Stream
+Documentation=https://github.com/your-repo/submarine_multistream
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+Environment="LD_LIBRARY_PATH=/home/pi/OrbbecSDK/lib/arm64"
+Environment="RECEIVER_IP=192.168.1.100"
+Environment="SENDER_IP=192.168.1.10"
+Environment="PORT=5000"
+WorkingDirectory=/home/pi/submarine_multistream
+ExecStart=/home/pi/submarine_multistream/submarine_launcher.sh autostart sender all
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+
+# Kill process cleanly
+TimeoutStopSec=10
+KillMode=mixed
+KillSignal=SIGTERM
+
+[Install]
+WantedBy=multi-user.target
