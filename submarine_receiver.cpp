@@ -158,61 +158,73 @@ int main(int argc, char **argv) {
             int frameWidth = 640;
             int frameHeight = 480;
 
-            // Top-left: Color
-            if (!color.empty() && color.cols > 0 && color.rows > 0) {
-                cv::Mat colorResized;
-                cv::resize(color, colorResized, cv::Size(frameWidth, frameHeight));
-                if (colorResized.cols == frameWidth && colorResized.rows == frameHeight) {
-                    colorResized.copyTo(display(cv::Rect(0, 0, frameWidth, frameHeight)));
-                    cv::putText(display, "COLOR", cv::Point(10, 30),
-                               cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2);
+            try {
+                // Top-left: Color
+                if (!color.empty() && color.cols > 0 && color.rows > 0) {
+                    cv::Mat colorResized;
+                    cv::resize(color, colorResized, cv::Size(frameWidth, frameHeight));
+                    if (colorResized.cols == frameWidth && colorResized.rows == frameHeight &&
+                        display.cols >= frameWidth && display.rows >= frameHeight) {
+                        colorResized.copyTo(display(cv::Rect(0, 0, frameWidth, frameHeight)));
+                        cv::putText(display, "COLOR", cv::Point(10, 30),
+                                   cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2);
+                    }
+                } else {
+                    cv::putText(display, "NO COLOR SIGNAL", cv::Point(150, 240),
+                               cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(100, 100, 100), 2);
                 }
-            } else {
-                cv::putText(display, "NO COLOR SIGNAL", cv::Point(150, 240),
-                           cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(100, 100, 100), 2);
-            }
+            } catch (...) {}
 
-            // Top-right: Depth
-            if (!depth.empty() && depth.cols > 0 && depth.rows > 0) {
-                cv::Mat depthResized;
-                cv::resize(depth, depthResized, cv::Size(frameWidth, frameHeight));
-                if (depthResized.cols == frameWidth && depthResized.rows == frameHeight) {
-                    depthResized.copyTo(display(cv::Rect(frameWidth, 0, frameWidth, frameHeight)));
-                    cv::putText(display, "DEPTH", cv::Point(frameWidth + 10, 30),
-                               cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2);
+            try {
+                // Top-right: Depth
+                if (!depth.empty() && depth.cols > 0 && depth.rows > 0) {
+                    cv::Mat depthResized;
+                    cv::resize(depth, depthResized, cv::Size(frameWidth, frameHeight));
+                    if (depthResized.cols == frameWidth && depthResized.rows == frameHeight &&
+                        display.cols >= frameWidth * 2 && display.rows >= frameHeight) {
+                        depthResized.copyTo(display(cv::Rect(frameWidth, 0, frameWidth, frameHeight)));
+                        cv::putText(display, "DEPTH", cv::Point(frameWidth + 10, 30),
+                                   cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2);
+                    }
+                } else {
+                    cv::putText(display, "NO DEPTH SIGNAL", cv::Point(frameWidth + 150, 240),
+                               cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(100, 100, 100), 2);
                 }
-            } else {
-                cv::putText(display, "NO DEPTH SIGNAL", cv::Point(frameWidth + 150, 240),
-                           cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(100, 100, 100), 2);
-            }
+            } catch (...) {}
 
-            // Bottom-left: IR
-            if (!ir.empty() && ir.cols > 0 && ir.rows > 0) {
-                cv::Mat irResized;
-                cv::resize(ir, irResized, cv::Size(frameWidth, frameHeight));
-                if (irResized.cols == frameWidth && irResized.rows == frameHeight) {
-                    irResized.copyTo(display(cv::Rect(0, frameHeight, frameWidth, frameHeight)));
-                    cv::putText(display, "IR", cv::Point(10, frameHeight + 30),
-                               cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2);
+            try {
+                // Bottom-left: IR
+                if (!ir.empty() && ir.cols > 0 && ir.rows > 0) {
+                    cv::Mat irResized;
+                    cv::resize(ir, irResized, cv::Size(frameWidth, frameHeight));
+                    if (irResized.cols == frameWidth && irResized.rows == frameHeight &&
+                        display.cols >= frameWidth && display.rows >= frameHeight * 2) {
+                        irResized.copyTo(display(cv::Rect(0, frameHeight, frameWidth, frameHeight)));
+                        cv::putText(display, "IR", cv::Point(10, frameHeight + 30),
+                                   cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2);
+                    }
+                } else {
+                    cv::putText(display, "NO IR SIGNAL", cv::Point(150, frameHeight + 240),
+                               cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(100, 100, 100), 2);
                 }
-            } else {
-                cv::putText(display, "NO IR SIGNAL", cv::Point(150, frameHeight + 240),
-                           cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(100, 100, 100), 2);
-            }
+            } catch (...) {}
 
-            // Bottom-right: 2D Map
-            if (!map.empty() && map.cols > 0 && map.rows > 0) {
-                cv::Mat mapResized;
-                cv::resize(map, mapResized, cv::Size(frameWidth, frameHeight));
-                if (mapResized.cols == frameWidth && mapResized.rows == frameHeight) {
-                    mapResized.copyTo(display(cv::Rect(frameWidth, frameHeight, frameWidth, frameHeight)));
-                    cv::putText(display, "2D MAP", cv::Point(frameWidth + 10, frameHeight + 30),
-                               cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2);
+            try {
+                // Bottom-right: 2D Map
+                if (!map.empty() && map.cols > 0 && map.rows > 0) {
+                    cv::Mat mapResized;
+                    cv::resize(map, mapResized, cv::Size(frameWidth, frameHeight));
+                    if (mapResized.cols == frameWidth && mapResized.rows == frameHeight &&
+                        display.cols >= frameWidth * 2 && display.rows >= frameHeight * 2) {
+                        mapResized.copyTo(display(cv::Rect(frameWidth, frameHeight, frameWidth, frameHeight)));
+                        cv::putText(display, "2D MAP", cv::Point(frameWidth + 10, frameHeight + 30),
+                                   cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2);
+                    }
+                } else {
+                    cv::putText(display, "NO MAP SIGNAL", cv::Point(frameWidth + 150, frameHeight + 240),
+                               cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(100, 100, 100), 2);
                 }
-            } else {
-                cv::putText(display, "NO MAP SIGNAL", cv::Point(frameWidth + 150, frameHeight + 240),
-                           cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(100, 100, 100), 2);
-            }
+            } catch (...) {}
 
             // Show display
             cv::imshow("Submarine Vision System", display);
