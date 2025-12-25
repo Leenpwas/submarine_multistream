@@ -30,7 +30,9 @@ fi
 # Build
 echo "[4/5] Building..."
 mkdir -p build && cd build
-cmake ..
+# Use simplified CMakeLists that only builds vision system
+cp ../CMakeLists_vision.txt ./CMakeLists.txt
+cmake .
 make submarine_vision_sender submarine_vision_receiver -j4
 
 # Setup launchers
