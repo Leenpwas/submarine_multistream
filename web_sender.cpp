@@ -49,11 +49,18 @@ int main(int argc, char **argv) {
 
     // Initialize Orbbec pipeline
     ob::Pipeline pipeline;
-    auto device = pipeline.getDevice();
-    printf("✓ Camera: %s\n", device->getDeviceName());
 
-    // Start COLOR stream (640x480, 30 FPS)
-    pipeline.startStream(ob::StreamType::COLOR);
+    // Create config for color stream
+    std::shared_ptr<ob::VideoStreamProfile> colorProfile = nullptr;
+    try {
+        // Try to get color stream profile
+        auto profiles = pipeline.getStreamProfileList(ob::OB_PROFILE_COLOR);
+        colorProfile = std::dynamic_pointer_cast<ob::VideoStreamProfile>(profiles->getProfile(0));
+    } catch (...) {
+        printf("Warning: Could not get color stream profile\n");
+    }
+
+    printf("✓ Camera initialized\n");
     printf("✓ Started color stream\n");
 
     printf("\n🎥 Streaming video to laptop...\n");
@@ -63,18 +70,24 @@ int main(int argc, char **argv) {
     time_t startTime = time(NULL);
 
     while (true) {
+        // Wait for frames (this starts the stream automatically)
         auto frameSet = pipeline.waitForFrames(100);
-        if (frameSet == nullptr) continue;
+        if (frameSet == nullptr) {
+            continue;
+        }
 
+        // Get color frame
         auto colorFrame = frameSet->colorFrame();
-        if (colorFrame == nullptr) continue;
+        if (colorFrame == nullptr) {
+            continue;
+        }
 
         // Get frame dimensions
         int width = colorFrame->width();
         int height = colorFrame->height();
 
-        // Convert to OpenCV format (direct pointer, no copy)
-        cv::Mat colorMat(height, width, CV_8UC3, (void*)colorFrame->data());
+        // Convert to OpenCV format
+        cv::Mat colorMat(height, width, CV_8UC8, (void*)colorFrame->data());
 
         // Encode as JPEG (80% quality)
         std::vector<uchar> buffer;
@@ -108,7 +121,6 @@ int main(int argc, char **argv) {
         }
     }
 
-    pipeline.stopStream(ob::StreamType::COLOR);
     close(sock);
 
     printf("\n✓ Stopped streaming\n");
